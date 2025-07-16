@@ -1,38 +1,41 @@
-const { SlashCommandBuilder, EmbedBuilder} = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("funfic")
-        .setDescription("Тестовая команда")
+        .setDescription("Комманда для отправки сообщения в отдельный чат")
         .addStringOption(option1 =>
-            option1.setName("test_options")
-                .setDescription("Тестовая опция 1")
+            option1.setName("msg")
+                .setDescription("Содержания сообщения")
                 .setRequired(true)
         )
         .addStringOption(option2 =>
-            option2.setName("test_string")
-            .setDescription("Тестовая опция 2")
-            .setRequired(true)
+            option2.setName("channel")
+                .setDescription("Канал (id)")
+                .setRequired(true)
         ),
-    
-    async execute(interaction){
+
+    async execute(interaction) {
+        //Получение имени отправителя комманды
         const user = interaction.member.user.globalName;
-        const channel = interaction.options.getString("test_string");
-        const message = interaction.options.getString("test_options");
+        //Сохранения в переменных id канала и содержания сообщения
+        const channel = interaction.options.getString("channel");
+        const message = interaction.options.getString("msg");
         await interaction.reply("Отправка");
-        if(user != "PX0PQ"){
+
+        //Проверка на отправителя
+        if (user != "PX0PQ") {
             await interaction.editReply(`Ответ в log`);
         }
-        else{
-            try{
+        else {
+            try {
                 await interaction.guild.channels.cache.get(channel).send(message);
                 await interaction.editReply("Отправлено!");
             }
-            catch(e){
-                await interaction.editReply(`Ответ в log 3`);
+            catch (e) {
+                await interaction.editReply(`Ответ в log`);
             }
-            //await interaction.reply(`Ответ в log 2`);
         }
-        
+
     }
 }
